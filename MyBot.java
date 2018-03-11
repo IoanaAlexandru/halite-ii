@@ -8,7 +8,7 @@ public class MyBot {
 
     public static void main(final String[] args) {
         final Networking networking = new Networking();
-        final GameMap gameMap = networking.initialize("smarterTamagocchi");
+        final GameMap gameMap = networking.initialize("aggressiveTamagocchi");
 
         // We now have 1 full minute to analyse the initial map.
         final String initialMapIntelligence =
@@ -30,33 +30,59 @@ public class MyBot {
 
                 Map<Double, LinkedList<Entity>> entitiesByDistance = gameMap.nearbyEntitiesByDistance(ship);
                 LinkedList<Entity> entities;
-                LinkedList<Planet> planetsByDistance = new LinkedList<>();
+                LinkedList<Planet> emptyPlanetsByDistance = new LinkedList<>();
+                LinkedList<Planet> ownedFreePlanetsByDistance = new LinkedList<>();
+                LinkedList<Ship> enemyShipsByDistance = new LinkedList<>();
 
                 for (double distance : entitiesByDistance.keySet()) {
                     entities = entitiesByDistance.get(distance);
                     for (Entity entity: entities) {
                         if (entity instanceof Planet) {
-                            planetsByDistance.add((Planet) entity);
+                            if (!((Planet) entity).isOwned()) {
+                                emptyPlanetsByDistance.add((Planet) entity);
+                            }
+                            if (entity.getOwner() == gameMap.getMyPlayerId() && !((Planet) entity).isFull()) {
+                                ownedFreePlanetsByDistance.add((Planet) entity);
+                            }
+                        }
+
+                        if (entity instanceof Ship && (entity.getOwner() != gameMap.getMyPlayerId())) {
+                            enemyShipsByDistance.add((Ship) entity);
                         }
                     }
                 }
 
-                for (final Planet planet : planetsByDistance) {
-                    if (planet.isOwned()) {
-                        continue;
-                    }
+                if (!emptyPlanetsByDistance.isEmpty()) {
+                    Planet closestPlanet = emptyPlanetsByDistance.get(0);
 
-                    if (ship.canDock(planet)) {
-                        moveList.add(new DockMove(ship, planet));
+                    if (ship.canDock(closestPlanet)) {
+                        moveList.add(new DockMove(ship, closestPlanet));
                         break;
                     }
 
-                    final ThrustMove newThrustMove = Navigation.navigateShipToDock(gameMap, ship, planet, Constants.MAX_SPEED/2);
+                    final ThrustMove newThrustMove = Navigation.navigateShipToDock(gameMap, ship, closestPlanet, Constants.MAX_SPEED);
                     if (newThrustMove != null) {
                         moveList.add(newThrustMove);
                     }
+                } else if (!ownedFreePlanetsByDistance.isEmpty()) {
+                    Planet closestPlanet = ownedFreePlanetsByDistance.get(0);
 
-                    break;
+                    if (ship.canDock(closestPlanet)) {
+                        moveList.add(new DockMove(ship, closestPlanet));
+                        break;
+                    }
+
+                    final ThrustMove newThrustMove = Navigation.navigateShipToDock(gameMap, ship, closestPlanet, Constants.MAX_SPEED);
+                    if (newThrustMove != null) {
+                        moveList.add(newThrustMove);
+                    }
+                } else if (!enemyShipsByDistance.isEmpty()) {
+                    Ship closestEnemyShip = enemyShipsByDistance.get(0);
+
+                    final ThrustMove newThrustMove = Navigation.navigateShipToDock(gameMap, ship, closestEnemyShip, Constants.MAX_SPEED);
+                    if (newThrustMove != null) {
+                        moveList.add(newThrustMove);
+                    }
                 }
             }
             Networking.sendMoves(moveList);
