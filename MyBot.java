@@ -1,12 +1,14 @@
 import hlt.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class MyBot {
 
     public static void main(final String[] args) {
         final Networking networking = new Networking();
-        final GameMap gameMap = networking.initialize("Tamagocchi");
+        final GameMap gameMap = networking.initialize("smarterTamagocchi");
 
         // We now have 1 full minute to analyse the initial map.
         final String initialMapIntelligence =
@@ -26,7 +28,20 @@ public class MyBot {
                     continue;
                 }
 
-                for (final Planet planet : gameMap.getAllPlanets().values()) {
+                Map<Double, LinkedList<Entity>> entitiesByDistance = gameMap.nearbyEntitiesByDistance(ship);
+                LinkedList<Entity> entities;
+                LinkedList<Planet> planetsByDistance = new LinkedList<>();
+
+                for (double distance : entitiesByDistance.keySet()) {
+                    entities = entitiesByDistance.get(distance);
+                    for (Entity entity: entities) {
+                        if (entity instanceof Planet) {
+                            planetsByDistance.add((Planet) entity);
+                        }
+                    }
+                }
+
+                for (final Planet planet : planetsByDistance) {
                     if (planet.isOwned()) {
                         continue;
                     }
