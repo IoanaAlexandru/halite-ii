@@ -1,5 +1,6 @@
 package hlt;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,9 @@ import java.util.TreeMap;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Collection;
+=======
+import java.util.*;
+>>>>>>> 33b861016c9e037ddca996eb023b59a49af076c5
 
 public class GameMap {
     private final int width, height;
@@ -93,24 +97,48 @@ public class GameMap {
     public Map<Double, LinkedList<Entity>> nearbyEntitiesByDistance(final Entity entity) {
         final Map<Double, LinkedList<Entity>> entityByDistance = new TreeMap<>();
         double distance;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 33b861016c9e037ddca996eb023b59a49af076c5
         for (final Planet planet : planets.values()) {
             if (planet.equals(entity)) {
                 continue;
             }
+<<<<<<< HEAD
             distance = entity.getDistanceTo(planet);
+=======
+
+            distance = entity.getDistanceTo(planet);
+
+>>>>>>> 33b861016c9e037ddca996eb023b59a49af076c5
             if (entityByDistance.get(distance) == null)
                 entityByDistance.put(distance, new LinkedList<Entity>());
             entityByDistance.get(distance).add(planet);
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 33b861016c9e037ddca996eb023b59a49af076c5
         for (final Ship ship : allShips) {
             if (ship.equals(entity)) {
                 continue;
             }
+<<<<<<< HEAD
             distance = entity.getDistanceTo(ship);
+=======
+
+            distance = entity.getDistanceTo(ship);
+
+>>>>>>> 33b861016c9e037ddca996eb023b59a49af076c5
             if (entityByDistance.get(distance) == null)
                 entityByDistance.put(distance, new LinkedList<Entity>());
             entityByDistance.get(distance).add(ship);
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 33b861016c9e037ddca996eb023b59a49af076c5
         return entityByDistance;
     }
 
