@@ -48,17 +48,16 @@ public class MyBot {
 					if (ship.canDock(planet)) {
 						moveList.add(new DockMove(ship, planet));
 						break;
-					}
-					if (nextPlanets.contains(planet))
+					} else if (nextPlanets.contains(planet))
 						continue;
-					
-					final ThrustMove newThrustMove = Navigation.navigateShipToDock(gameMap, ship, planet, Constants.MAX_SPEED);
-					if (newThrustMove != null) {
-						moveList.add(newThrustMove);
-						nextPlanets.add(planet);
+					else {
+						final ThrustMove newThrustMove = Navigation.navigateShipToDock(gameMap, ship, planet, Constants.MAX_SPEED);
+						if (newThrustMove != null) {
+							moveList.add(newThrustMove);
+							nextPlanets.add(planet);
+						}
 						break;
 					}
-//					break;
 				}
             }
             Networking.sendMoves(moveList);
