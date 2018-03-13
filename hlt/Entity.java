@@ -1,3 +1,4 @@
+package hlt;
 
 public class Entity extends Position implements Comparable<Entity>{
 
