@@ -89,10 +89,11 @@ public class GameMap {
         double distance;
 
         for (final Planet planet : planets.values()) {
-            if (planet.equals(entity)) {
+        
+        	if (planet.equals(entity)) {
                 continue;
             }
-
+        
             distance = entity.getDistanceTo(planet);
 
             if (entityByDistance.get(distance) == null)
@@ -111,6 +112,9 @@ public class GameMap {
                 entityByDistance.put(distance, new LinkedList<Entity>());
             entityByDistance.get(distance).add(ship);
         }
+
+        //if there are more entities at the same distance, sort them by radius
+        Collections.sort((LinkedList<Entity>)entityByDistance);
 
         return entityByDistance;
     }
