@@ -46,7 +46,7 @@ public class Entity extends Position implements Comparable<Entity>{
 	@Override
 	public int compareTo(Entity o) {
 		if(this.radius == o.radius)
-			return (int) (this.radius - o.radius);
+			return (int) (o.radius - this.radius);
 		else
 			return 1;
 	}
