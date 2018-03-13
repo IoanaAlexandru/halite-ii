@@ -21,8 +21,10 @@ care ar trebui urmați în vederea îmbunătățirii bot-ului de bază oferit
 de starter pack.
 
 Prima modificare făcută a fost sortarea planetelor în funcție de
-distanța față de rachetă, în locul iterării prin lista default de pla-
-nete de pe hartă. Am modificat puțin și funcția din hlt/ care ordonea-
-ză entitățile după distanță, pentru a trata cazul în care există două
-entități la aceeași distanță față de punctul de referință (în locul
-unui `Map<Double, Entity>` avem un `Map<Double, LinkedList<Entity>>`).
+distanța față de rachetă, în locul iterării prin lista default de
+planete de pe hartă. Am modificat puțin și funcția din hlt/ care
+ordonează entitățile după distanță, pentru a trata cazul în care
+există două entități la aceeași distanță față de punctul de referință
+(în locul unui 
+`Map<Double, Entity>` avem un 
+`Map<Double, LinkedList<Entity>>`).
