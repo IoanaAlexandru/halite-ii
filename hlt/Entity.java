@@ -1,6 +1,5 @@
-package hlt;
 
-public class Entity extends Position {
+public class Entity extends Position implements Comparable<Entity>{
 
     private final int owner;
     private final int id;
@@ -41,4 +40,13 @@ public class Entity extends Position {
                 ", radius=" + radius +
                 "]";
     }
+
+    //sort in descending order by radius
+	@Override
+	public int compareTo(Entity o) {
+		if(this.radius == o.radius)
+			return (int) (this.radius - o.radius);
+		else
+			return 1;
+	}
 }
