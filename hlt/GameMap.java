@@ -120,29 +120,6 @@ public class GameMap {
 		return entityByDistance;
 	}
 
-	public Map<Double, LinkedList<Entity>> emptyPlanets(final Planet entity) {
-		final Map<Double, LinkedList<Entity>> emptyPlanetsByDistance = new TreeMap<>();
-		double distance;
-
-		for (final Planet planet : planets.values()) {
-
-			if (planet.isOwned() == true)
-				continue;
-
-			distance = entity.getDistanceTo(planet);
-
-			if (emptyPlanetsByDistance.get(distance) == null)
-				emptyPlanetsByDistance.put(distance, new LinkedList<Entity>());
-			emptyPlanetsByDistance.get(distance).add(planet);
-
-			// if there are more empty planets at same distance, sort them by radius
-			if (emptyPlanetsByDistance.get(distance).size() > 1)
-				Collections.sort(emptyPlanetsByDistance.get(distance));
-		}
-		
-		return emptyPlanetsByDistance;
-	}
-
     public GameMap updateMap(final Metadata mapMetadata) {
         final int numberOfPlayers = MetadataParser.parsePlayerNum(mapMetadata);
 
