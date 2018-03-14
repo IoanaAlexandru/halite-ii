@@ -1,6 +1,12 @@
 package hlt;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Collection;
 
 public class GameMap {
     private final int width, height;
@@ -87,31 +93,24 @@ public class GameMap {
     public Map<Double, LinkedList<Entity>> nearbyEntitiesByDistance(final Entity entity) {
         final Map<Double, LinkedList<Entity>> entityByDistance = new TreeMap<>();
         double distance;
-
         for (final Planet planet : planets.values()) {
             if (planet.equals(entity)) {
                 continue;
             }
-
             distance = entity.getDistanceTo(planet);
-
             if (entityByDistance.get(distance) == null)
                 entityByDistance.put(distance, new LinkedList<Entity>());
             entityByDistance.get(distance).add(planet);
         }
-
         for (final Ship ship : allShips) {
             if (ship.equals(entity)) {
                 continue;
             }
-
             distance = entity.getDistanceTo(ship);
-
             if (entityByDistance.get(distance) == null)
                 entityByDistance.put(distance, new LinkedList<Entity>());
             entityByDistance.get(distance).add(ship);
         }
-
         return entityByDistance;
     }
 
