@@ -1,8 +1,5 @@
 import hlt.*;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class MyBot {
     public static void main(final String[] args) {
