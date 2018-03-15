@@ -1,0 +1,9 @@
+*.hlt
+*.log
+*.class
+*/*.class
+.idea/
+*.zip
+halite
+run_game.sh
+*.iml
