@@ -90,29 +90,41 @@ public class GameMap {
         }
     }
 
-    public Map<Double, LinkedList<Entity>> nearbyEntitiesByDistance(final Entity entity) {
-        final Map<Double, LinkedList<Entity>> entityByDistance = new TreeMap<>();
-        double distance;
-        for (final Planet planet : planets.values()) {
-            if (planet.equals(entity)) {
-                continue;
-            }
-            distance = entity.getDistanceTo(planet);
-            if (entityByDistance.get(distance) == null)
-                entityByDistance.put(distance, new LinkedList<Entity>());
-            entityByDistance.get(distance).add(planet);
-        }
-        for (final Ship ship : allShips) {
-            if (ship.equals(entity)) {
-                continue;
-            }
-            distance = entity.getDistanceTo(ship);
-            if (entityByDistance.get(distance) == null)
-                entityByDistance.put(distance, new LinkedList<Entity>());
-            entityByDistance.get(distance).add(ship);
-        }
-        return entityByDistance;
-    }
+   public Map<Double, LinkedList<Entity>> nearbyEntitiesByDistance(final Entity entity) {
+		final Map<Double, LinkedList<Entity>> entityByDistance = new TreeMap<>();
+		double distance;
+
+		for (final Planet planet : planets.values()) {
+
+			if (planet.equals(entity)) {
+				continue;
+			}
+		
+			distance = entity.getDistanceTo(planet);
+
+			if (entityByDistance.get(distance) == null)
+				entityByDistance.put(distance, new LinkedList<Entity>());
+			entityByDistance.get(distance).add(planet);
+
+			// if there are more planets at same distance, sort them by radius
+			if (entityByDistance.get(distance).size() > 1)
+				Collections.sort(entityByDistance.get(distance));
+		}
+
+		for (final Ship ship : allShips) {
+			if (ship.equals(entity)) {
+				continue;
+			}
+
+			distance = entity.getDistanceTo(ship);
+
+			if (entityByDistance.get(distance) == null)
+				entityByDistance.put(distance, new LinkedList<Entity>());
+			entityByDistance.get(distance).add(ship);
+		}
+
+		return entityByDistance;
+	}
 
     public GameMap updateMap(final Metadata mapMetadata) {
         final int numberOfPlayers = MetadataParser.parsePlayerNum(mapMetadata);
