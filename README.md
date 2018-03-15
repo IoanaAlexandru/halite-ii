@@ -12,6 +12,7 @@
   * MITOCARU Irina (324CB)
   * MITRAN Andreea (324CB)
 
+<!--
 # Structură proiect
 
 Structura este bazată pe bot-ul din starter pack. Fișierele cu [*] au
@@ -37,6 +38,7 @@ fost modificate de noi.
 │   ├── UndockMove.java
 │   └── Util.java
 └── MyBot.java [*]
+-->
 
 # Descriere proces
 
