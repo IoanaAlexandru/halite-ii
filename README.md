@@ -1,15 +1,42 @@
 	 _           _                          
-	| |__  _   _| |_ ___   _ __ ___   ___ _ 
-	| '_ \| | | | __/ _ \ | '_ ` _ \ / _ (_)
-	| |_) | |_| | ||  __/ | | | | | |  __/_ 
-	|_.__/ \__, |\__\___| |_| |_| |_|\___( )
-	       |___/                         |/
+	│ │__  _   _│ │_ ___   _ __ ___   ___ _ 
+	│ '_ \│ │ │ │ __/ _ \ │ '_ ` _ \ / _ (_)
+	│ │_) │ │_│ │ ││  __/ │ │ │ │ │ │  __/_ 
+	│_.__/ \__, │\__\___│ │_│ │_│ │_│\___( )
+	       │___/                         │/
 
 # Membrii echipei
+
   * ALEXANDRU Ioana (324CB)
   * GRIGORE Edwin-Mark (324CB)
   * MITOCARU Irina (324CB)
   * MITRAN Andreea (324CB)
+
+# Structură proiect
+
+Structura este bazată pe bot-ul din starter pack. Fișierele cu [*] au
+fost modificate de noi.
+.
+├── hlt
+│   ├── Collision.java
+│   ├── Constants.java
+│   ├── DockMove.java
+│   ├── Entity.java
+│   ├── GameMap.java [*]
+│   ├── Log.java
+│   ├── Metadata.java
+│   ├── MetadataParser.java
+│   ├── Move.java
+│   ├── Navigation.java
+│   ├── Networking.java
+│   ├── Planet.java
+│   ├── Player.java
+│   ├── Position.java
+│   ├── Ship.java
+│   ├── ThrustMove.java
+│   ├── UndockMove.java
+│   └── Util.java
+└── MyBot.java [*]
 
 # Descriere proces
 
