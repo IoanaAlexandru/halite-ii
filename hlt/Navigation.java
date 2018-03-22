@@ -2,6 +2,14 @@ package hlt;
 
 public class Navigation {
 
+    /**
+     *
+     * @param gameMap
+     * @param ship
+     * @param dockTarget
+     * @param maxThrust
+     * @return
+     */
     public static ThrustMove navigateShipToDock(
             final GameMap gameMap,
             final Ship ship,
@@ -16,6 +24,17 @@ public class Navigation {
         return navigateShipTowardsTarget(gameMap, ship, targetPos, maxThrust, avoidObstacles, maxCorrections, angularStepRad);
     }
 
+    /**
+     *
+     * @param gameMap
+     * @param ship
+     * @param targetPos
+     * @param maxThrust
+     * @param avoidObstacles
+     * @param maxCorrections
+     * @param angularStepRad
+     * @return
+     */
     public static ThrustMove navigateShipTowardsTarget(
             final GameMap gameMap,
             final Ship ship,

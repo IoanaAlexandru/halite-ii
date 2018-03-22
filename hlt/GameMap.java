@@ -47,6 +47,16 @@ public class GameMap {
         return playersUnmodifiable;
     }
 
+    public LinkedList<Integer> getAllPlayerIds() {
+        List<Player> players = getAllPlayers();
+        LinkedList<Integer> playerIds = new LinkedList<>();
+
+        for (Player player : players)
+            playerIds.add(player.getId());
+
+        return playerIds;
+    }
+
     public Player getMyPlayer() {
         return getAllPlayers().get(getMyPlayerId());
     }
@@ -90,29 +100,38 @@ public class GameMap {
         }
     }
 
-   public Map<Double, LinkedList<Entity>> nearbyEntitiesByDistance(final Entity entity) {
+    /**
+     *
+     * @param entity reference position
+     * @param entityType 'p' for planets, 's' for ships, 'a' for all
+     * @param owners list of IDs (can contain -1 for empty planets)
+     * @return list of relevant entities on the map, sorted by nearest to farthest from the reference position
+     */
+   public Map<Double, LinkedList<Entity>> nearbyEntitiesByDistance(final Entity entity, char entityType, LinkedList<Integer> owners) {
 		final Map<Double, LinkedList<Entity>> entityByDistance = new TreeMap<>();
 		double distance;
 
-		for (final Planet planet : planets.values()) {
+		if (entityType == 'p' || entityType == 'a')
+            for (final Planet planet : planets.values()) {
 
-			if (planet.equals(entity)) {
-				continue;
-			}
-		
-			distance = entity.getDistanceTo(planet);
+                if (planet.equals(entity) || !owners.contains(planet.getOwner())) {
+                    continue;
+                }
 
-			if (entityByDistance.get(distance) == null)
-				entityByDistance.put(distance, new LinkedList<Entity>());
-			entityByDistance.get(distance).add(planet);
+                distance = entity.getDistanceTo(planet);
 
-			// if there are more planets at same distance, sort them by radius
-			if (entityByDistance.get(distance).size() > 1)
-				Collections.sort(entityByDistance.get(distance));
-		}
+                if (entityByDistance.get(distance) == null)
+                    entityByDistance.put(distance, new LinkedList<Entity>());
+                entityByDistance.get(distance).add(planet);
 
+                // if there are more planets at the same distance, sort them by radius
+                if (entityByDistance.get(distance).size() > 1)
+                    Collections.sort(entityByDistance.get(distance));
+            }
+
+        if (entityType == 's' || entityType == 'a')
 		for (final Ship ship : allShips) {
-			if (ship.equals(entity)) {
+			if (ship.equals(entity) || !owners.contains(ship.getOwner())) {
 				continue;
 			}
 
@@ -125,6 +144,19 @@ public class GameMap {
 
 		return entityByDistance;
 	}
+
+	public LinkedList<Entity> sortedNearbyEntities(final Entity entity, char entityType, LinkedList<Integer> owners) {
+       LinkedList<Entity> entities = new LinkedList<>();
+       Map<Double, LinkedList<Entity>> entitiesByDistance = nearbyEntitiesByDistance(entity, entityType, owners);
+
+       for (double dist : entitiesByDistance.keySet()) {
+           for (Entity ent : entitiesByDistance.get(dist)) {
+               entities.add(ent);
+           }
+       }
+
+       return entities;
+    }
 
     public GameMap updateMap(final Metadata mapMetadata) {
         final int numberOfPlayers = MetadataParser.parsePlayerNum(mapMetadata);
