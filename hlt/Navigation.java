@@ -6,20 +6,20 @@ public class Navigation {
      *
      * @param gameMap
      * @param ship
-     * @param dockTarget
+     * @param target
      * @param maxThrust
      * @return
      */
-    public static ThrustMove navigateShipToDock(
+    public static ThrustMove navigateShipToEntity(
             final GameMap gameMap,
             final Ship ship,
-            final Entity dockTarget,
+            final Entity target,
             final int maxThrust)
     {
         final int maxCorrections = Constants.MAX_NAVIGATION_CORRECTIONS;
         final boolean avoidObstacles = true;
         final double angularStepRad = Math.PI/180.0;
-        final Position targetPos = ship.getClosestPoint(dockTarget);
+        final Position targetPos = ship.getClosestPoint(target);
 
         return navigateShipTowardsTarget(gameMap, ship, targetPos, maxThrust, avoidObstacles, maxCorrections, angularStepRad);
     }

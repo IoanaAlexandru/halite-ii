@@ -15,13 +15,14 @@ public class MyBot {
         Log.log(initialMapIntelligence);
         
         final ArrayList<Move> moveList = new ArrayList<>();
-        final ArrayList<Planet> nextPlanets = new ArrayList<>();
+        final ArrayList<Planet> assignedPlanets = new ArrayList<>();
         
         for (;;) {
             moveList.clear();
-            nextPlanets.clear();
+            assignedPlanets.clear();
             networking.updateMap(gameMap);
-            
+
+            //Add a command for each ship in moveList
             for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {
                 if (ship.getDockingStatus() != Ship.DockingStatus.Undocked) {
                     continue;
@@ -29,8 +30,9 @@ public class MyBot {
                 
                 LinkedList<Integer> owners = new LinkedList<>();
 
-                boolean moveCommandSaved = false;
+                boolean moveCommandSaved = false; //true if we added a command for the current ship
 
+                //If there are empty planets, go to the closest one that doesn't already have a friendly ship going for it
                 owners.add(-1);
                 LinkedList<Entity> emptyPlanetsByDistance =
                         gameMap.sortedNearbyEntities(ship, 'p', owners);
@@ -39,22 +41,19 @@ public class MyBot {
                     for (Entity entity : emptyPlanetsByDistance) {
                         Planet planet = (Planet)entity;
 
-                        if (ship.canDock(planet)) {
-                            moveList.add(new DockMove(ship, planet));
+                        Move move = ship.moveAndDock(planet, assignedPlanets, gameMap);
+
+                        if(move != null) {
+                            moveList.add(move);
+                            assignedPlanets.add(planet);
                             moveCommandSaved = true;
                             break;
-                        } else if (!nextPlanets.contains(planet) || !planet.isFull()) {
-                            final ThrustMove newThrustMove = Navigation.navigateShipToDock(gameMap, ship, planet, Constants.MAX_SPEED);
-                            if (newThrustMove != null) {
-                                moveList.add(newThrustMove);
-                                nextPlanets.add(planet);
-                                moveCommandSaved = true;
-                                break;
-                            }
                         }
                     }
 				}
 
+                //If there are owned planets that can be docked to, go to the closest one that doesn't already have a
+                // friendly ship going for it
 				if (!moveCommandSaved) {
                     owners.clear();
                     owners.add(gameMap.getMyPlayerId());
@@ -68,39 +67,33 @@ public class MyBot {
                             if (planet.isFull())
                                 continue;
 
-                            if (ship.canDock(planet)) {
-                                moveList.add(new DockMove(ship, planet));
+                            Move move = ship.moveAndDock(planet, assignedPlanets, gameMap);
+
+                            if(move != null) {
+                                moveList.add(move);
+                                assignedPlanets.add(planet);
                                 moveCommandSaved = true;
                                 break;
-                            } else if (!nextPlanets.contains(planet)) {
-                                final ThrustMove newThrustMove = Navigation.navigateShipToDock(gameMap, ship, planet, Constants.MAX_SPEED);
-                                if (newThrustMove != null) {
-                                    moveList.add(newThrustMove);
-                                    nextPlanets.add(planet);
-                                    moveCommandSaved = true;
-                                    break;
-                                }
                             }
                         }
                     }
                 }
 
+                //If no command was issued yet, attack closest enemy ship
                 if (!moveCommandSaved) {
                     owners = gameMap.getAllPlayerIds();
                     owners.remove(gameMap.getMyPlayerId());
-                    Log.log(owners.toString());
                     LinkedList<Entity> enemyShipsByDistance =
                             gameMap.sortedNearbyEntities(ship, 's', owners);
 
                     Ship closestEnemyShip = (Ship) enemyShipsByDistance.get(0);
-                    final ThrustMove newThrustMove = Navigation.navigateShipTowardsTarget(gameMap, ship,
-                            closestEnemyShip.getClosestPoint(ship), Constants.MAX_SPEED, true,
-                            Constants.MAX_NAVIGATION_CORRECTIONS, Math.PI/180.0);
+                    final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, ship, closestEnemyShip, Constants.MAX_SPEED);
                     if (newThrustMove != null) {
                         moveList.add(newThrustMove);
                     }
                 }
             }
+
             Networking.sendMoves(moveList);
         }
     }

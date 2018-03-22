@@ -1,5 +1,8 @@
 package hlt;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Ship extends Entity {
 
     public enum DockingStatus { Undocked, Docking, Docked, Undocking }
@@ -39,6 +42,18 @@ public class Ship extends Entity {
 
     public boolean canDock(final Planet planet) {
         return getDistanceTo(planet) <= Constants.SHIP_RADIUS + Constants.DOCK_RADIUS + planet.getRadius();
+    }
+
+    public Move moveAndDock(Planet planet, ArrayList<Planet> assignedPlanets, GameMap gameMap) {
+        if (this.canDock(planet)) {
+            return new DockMove(this, planet);
+        } else if (!assignedPlanets.contains(planet)) {
+            final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, this, planet, Constants.MAX_SPEED);
+            if (newThrustMove != null) {
+                return newThrustMove;
+            }
+        }
+        return null;
     }
 
     @Override
