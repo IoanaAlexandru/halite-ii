@@ -71,7 +71,7 @@ suficient ca acesta doar să captureze planetele. După ce se asigură
 că nu există planete goale sau planete capturate care încă au spațiu
 de docking pentru alte nave, fiecare navă va ataca cea mai apropiată
 navă inamică. Pentru a realiza acest lucru, am modificat iar funcția
-`nearbyEntitiesByDistance`, adăgugându-i opțiuni: poate primi încă
+`nearbyEntitiesByDistance`, adăugându-i opțiuni: poate primi încă
 două argumente care indică tipul entităților căutate (ship/planet)
 și jucătorii de care aparțin acele entități. În plus, metoda
 `sortedNearbyEntities` se folosește de aceasta din urmă și întoarce
