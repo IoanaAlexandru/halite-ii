@@ -1,51 +1,71 @@
 package hlt;
 
-public class Entity extends Position implements Comparable<Entity>{
+import java.util.LinkedList;
+import java.util.Map;
 
-    private final int owner;
-    private final int id;
-    private final int health;
-    private final double radius;
+public class Entity extends Position implements Comparable<Entity> {
 
-    public Entity(final int owner, final int id, final double xPos, final double yPos, final int health, final double radius) {
-        super(xPos, yPos);
-        this.owner = owner;
-        this.id = id;
-        this.health = health;
-        this.radius = radius;
-    }
+	private final int owner;
+	private final int id;
+	private final int health;
+	private final double radius;
 
-    public int getOwner() {
-        return owner;
-    }
+	public Entity(final int owner, final int id, final double xPos, final double yPos, final int health, final double radius) {
+		super(xPos, yPos);
+		this.owner = owner;
+		this.id = id;
+		this.health = health;
+		this.radius = radius;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public int getOwner() {
+		return owner;
+	}
 
-    public int getHealth() {
-        return health;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public double getRadius() {
-        return radius;
-    }
+	public int getHealth() {
+		return health;
+	}
 
-    @Override
-    public String toString() {
-        return "Entity[" +
-                super.toString() +
-                ", owner=" + owner +
-                ", id=" + id +
-                ", health=" + health +
-                ", radius=" + radius +
-                "]";
-    }
+	public double getRadius() {
+		return radius;
+	}
 
-    //sort in descending order by radius
+	@Override
+	public String toString() {
+		return "Entity[" +
+				super.toString() +
+				", owner=" + owner +
+				", id=" + id +
+				", health=" + health +
+				", radius=" + radius +
+				"]";
+	}
+
+	//sort in descending order by radius
 	@Override
 	public int compareTo(Entity o) {
 
-			return (int) (o.radius - this.radius);
+		return (int) (o.radius - this.radius);
+	}
+
+	public static int countUndockedShipsInRange(Map<Double, LinkedList<Entity>> shipsByDistance, int range) {
+		int count = 0;
+
+		for (double dist : shipsByDistance.keySet()) {
+			for (Entity e : shipsByDistance.get(dist)) {
+				if (((Ship) e).getDockingStatus() == Ship.DockingStatus.Undocked) {
+					if (dist <= range) {
+						count++;
+					} else {
+						break;
+					}
+				}
+			}
+		}
+		return count;
 	}
 }
