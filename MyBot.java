@@ -30,17 +30,8 @@ public class MyBot {
 					continue;
 				}
 
-				LinkedList<Integer> owners = new LinkedList<>();
-
-				//get a list with all entities by distance - planets and ships
-				LinkedList<Integer> playersId = gameMap.getAllPlayerIds();
-				if (!playersId.isEmpty()) {
-					for (Integer id : playersId) {
-						owners.add(id);
-					}
-				}
+				LinkedList<Integer> owners = gameMap.getAllPlayerIds();
 				owners.add(-1);
-				owners.add(gameMap.getMyPlayerId());
 
 				LinkedList<Entity> allEntitiesByDistance = gameMap.sortedNearbyEntities(ship, 'a', owners);
 
@@ -53,23 +44,29 @@ public class MyBot {
 							if (!((Planet) entity).isOwned() ||
 									(entity.getOwner() == gameMap.getMyPlayerId() && !((Planet) entity).isFull())) {
 
-								Move move = ship.moveAndDock((Planet) entity, assignedPlanets, gameMap);
-
-								if (move != null) {
-									moveList.add(move);
-									assignedPlanets.add((Planet) entity);
-									break;
-								}
+                                if (ship.canDock((Planet) entity)) {
+                                    moveList.add(new DockMove(ship, (Planet) entity));
+                                    Log.log("1");
+                                    break;
+                                } else {
+                                    final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, ship, entity, Constants.MAX_SPEED);
+                                    if (newThrustMove != null) {
+                                        moveList.add(newThrustMove);
+                                        Log.log("2");
+                                        break;
+                                    }
+                                }
 							}
 						}
 						//SHIP
 						else {
 							//ship not ours -> move towards it
-							if (entity.getId() != gameMap.getMyPlayerId()) {
+							if (entity.getOwner() != gameMap.getMyPlayerId()) {
 
 								final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, ship, entity, Constants.MAX_SPEED);
 								if (newThrustMove != null) {
 									moveList.add(newThrustMove);
+									Log.log("3");
 									break;
 								}
 							}
