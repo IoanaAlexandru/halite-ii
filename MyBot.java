@@ -53,7 +53,7 @@ public class MyBot {
 				}
 
                 //If there are owned planets that can be docked to, go to the closest one that doesn't already have a
-                // friendly ship going for it
+                // friendly ship going for it :)
 				if (!moveCommandSaved) {
                     owners.clear();
                     owners.add(gameMap.getMyPlayerId());
