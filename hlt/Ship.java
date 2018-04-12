@@ -2,10 +2,12 @@ package hlt;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class Ship extends Entity {
 
-    public enum DockingStatus { Undocked, Docking, Docked, Undocking }
+    public enum DockingStatus {Undocked, Docking, Docked, Undocking}
 
     private final DockingStatus dockingStatus;
     private final int dockedPlanet;
