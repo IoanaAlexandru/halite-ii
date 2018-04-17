@@ -66,14 +66,10 @@ ciocnirilor cu propriile nave.
 
 ## Task 2
 
-Cum de această dată bot-ul nu va mai fi singur pe hartă, nu este
-suficient ca acesta doar să captureze planetele. După ce se asigură
-că nu există planete goale sau planete capturate care încă au spațiu
-de docking pentru alte nave, fiecare navă va ataca cea mai apropiată
-navă inamică. Pentru a realiza acest lucru, am modificat iar funcția
-`nearbyEntitiesByDistance`, adăugându-i opțiuni: poate primi încă
-două argumente care indică tipul entităților căutate (ship/planet)
-și jucătorii de care aparțin acele entități. În plus, metoda
-`sortedNearbyEntities` se folosește de aceasta din urmă și întoarce
-o listă ordonată în funcție de distanța față de un punct de reper
-cu entitățile căutate.
+Având în vedere strategia implementată de bot-ul din checker,
+ne-am gândit că o strategie bună ar fi să ne axăm pe ofensivă.
+Prin urmare, fiecare rachetă se îndreaptă spre cea mai apropiată
+navă dintre cele ale inamicului care nu a fost țintită deja de o
+altă rachetă.
+
+End of story.
