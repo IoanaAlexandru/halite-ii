@@ -28,12 +28,12 @@ fost modificate de noi.
 │   ├── Metadata.java
 │   ├── MetadataParser.java
 │   ├── Move.java
-│   ├── Navigation.java
+│   ├── Navigation.java [*]
 │   ├── Networking.java
 │   ├── Planet.java
 │   ├── Player.java
 │   ├── Position.java
-│   ├── Ship.java
+│   ├── Ship.java [*]
 │   ├── ThrustMove.java
 │   ├── UndockMove.java
 │   └── Util.java
@@ -62,4 +62,14 @@ A doua modificare a fost în sensul atribuirii unei direcții diferite
 fiecărui bot, pentru a nu merge toți către aceeași planetă. Lucrul
 acesta scade timpul necesar pentru ocuparea tuturor planetelor și,
 de asemenea, rezolvă (temporar, pe cazul Single Player) problema
-ciocnirilor cu propriile nave. 
+ciocnirilor cu propriile nave.
+
+## Task 2
+
+Având în vedere strategia implementată de bot-ul din checker,
+ne-am gândit că o strategie bună ar fi să ne axăm pe ofensivă.
+Prin urmare, fiecare rachetă se îndreaptă spre cea mai apropiată
+navă dintre cele ale inamicului care nu a fost țintită deja de o
+altă rachetă.
+
+End of story.

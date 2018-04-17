@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ $# -ne 1 ] && [ $# -ne 3 ]
+then
+	echo "USAGE: ./changesBy.sh name [since until]"
+	echo "EXAMPLE: ./changesBy.sh ioana \"2 weeks ago\" \"now\""
+else
+	if [ $# -eq 1 ]
+	then
+		git log --shortstat --author "$1" | grep "files\? changed" \
+	    | awk '{files+=$1; inserted+=$4; deleted+=$6} END \
+	           {print "files changed:", files, "lines inserted:", \
+	           inserted, "lines deleted:", deleted}'
+	else
+		git log --shortstat --author "$1" --since "$2" --until "$3" | grep "files\? changed" \
+		    | awk '{files+=$1; inserted+=$4; deleted+=$6} END \
+		           {print "files changed:", files, "lines inserted:", \
+		           inserted, "lines deleted:", deleted}'
+	fi
+fi
