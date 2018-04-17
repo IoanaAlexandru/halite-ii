@@ -28,6 +28,63 @@ public class Navigation {
      *
      * @param gameMap
      * @param ship
+     * @param unit accuracy = 0.1, equal to maxThrust
+     * @return
+     */
+/*    public static boolean[][] createHitMap (
+            final GameMap gameMap,
+            final Ship ship,
+            final double unit)
+    {
+        boolean[][] hitMap = new boolean[width / unit][height / unit];
+        List<Ship> allShips = gameMap.getAllShips();
+        List<Planet> allPlanets = gameMap.getAllPlanets();
+        for (Ship ship : allShips) {
+            double leftSide = ship.getXPos() - ship.getRadius();
+            while (true) {
+                double fPart = leftSide % 1;
+                if (fPart == 0)
+                    break;
+                else
+                    leftSide -= 0.1;
+            }
+            double rightSide = ship.getXPos() + ship.getRadius();
+            while (true) {
+                double fPart = rightSide % 1;
+                if (fPart == 0)
+                    break;
+                else
+                    rightSide += 0.1;
+            }
+            double upSide = ship.getYPos() + ship.getRadius();
+            while (true) {
+                double fPart = upSide % 1;
+                if (fPart == 0)
+                    break;
+                else
+                    upSide += 0.1;
+            }
+            double downSide = ship.getYPos() - ship.getRadius();
+            while (true) {
+                double fPart = downSide % 1;
+                if (fPart == 0)
+                    break;
+                else
+                    downSide -= 0.1;
+            }
+
+            for (double i = leftSide; i <= rightSide; i += unit) {
+                for (double j = upSide; j <= downSide; j += unit) {
+                    hitMap[i][j] = false;
+                }
+            }
+        }
+    }
+*/
+    /**
+     *
+     * @param gameMap
+     * @param ship
      * @param targetPos
      * @param maxThrust
      * @param avoidObstacles
