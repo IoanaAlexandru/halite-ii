@@ -16,13 +16,10 @@ public class MyBot {
 		Log.log(initialMapIntelligence);
 
 		final ArrayList<Move> moveList = new ArrayList<>();
-		final ArrayList<Planet> assignedPlanets = new ArrayList<>();
 
 		for (; ; ) {
 			moveList.clear();
-			assignedPlanets.clear();
 			networking.updateMap(gameMap);
-
 
 			LinkedList<Integer> owners = new LinkedList<>();
 			Planet target = gameMap.colonizationTarget();
@@ -117,13 +114,16 @@ public class MyBot {
 				//if allyCount > enemyCount, then dock
 				if (countUndockedAlliedShips > countUndockedEnemyShips) {
 					moveList.add(new DockMove(ship, target));
+					Log.log("dock 2?");
 					moveCommand = true;
 					break;
 				} else {
-//					Log.log("4");
+					Log.log("NU.");
 				}
 
 			}
+
+			Log.log("ok");
 
 			Networking.sendMoves(moveList);
 		}
