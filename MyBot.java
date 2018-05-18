@@ -23,7 +23,46 @@ public class MyBot {
 
 			LinkedList<Integer> owners = new LinkedList<>();
 			Planet target = gameMap.colonizationTarget();
-			boolean moveCommand = false;
+			boolean moveCommand = true;
+
+			// Checks survival strategy conditions
+            boolean survivalMode = false;
+            List<Player> players = gameMap.getAllPlayers();
+            int stillAlive = 0;  // number of players that still have ships
+            for (Player p : players) {
+                if (p.getShips().size() > 0)
+                    stillAlive++;
+            }
+
+            owners.add(gameMap.getMyPlayerId());
+            if (stillAlive >= 2 && networking.getTurn() >= 60) {
+                LinkedList<Entity> myOwnedPlanets = gameMap.sortedNearbyEntities(target, 'p', owners);
+                for (Entity e : myOwnedPlanets) {
+                    //undocked allied ships for target within a radius of 50
+                    owners.add(gameMap.getMyPlayerId());
+                    Map<Double, LinkedList<Entity>> alliedShipsByDistance = gameMap.nearbyEntitiesByDistance(e, 's', owners);
+                    int countUndockedAlliedShips = Entity.countUndockedShipsInRange(alliedShipsByDistance, 50);
+
+                    //undocked enemy ships within a radius of 50
+                    owners = gameMap.getAllPlayerIds();
+                    owners.remove(gameMap.getMyPlayerId());
+                    Map<Double, LinkedList<Entity>> enemyShipsByDistance = gameMap.nearbyEntitiesByDistance(e, 's', owners);
+                    int countUndockedEnemyShips = Entity.countUndockedShipsInRange(enemyShipsByDistance, 50);
+
+                    if (countUndockedEnemyShips - countUndockedAlliedShips < 3) {
+                        survivalMode = false;
+                    }
+                }
+            }
+
+            if (survivalMode) {
+                for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {
+                    // TODO
+                }
+                continue;
+            }
+
+            // Survival mode NOT deployed
 
 			//undocked allied ships for target within a radius of 25
 			owners.add(gameMap.getMyPlayerId());
@@ -35,7 +74,6 @@ public class MyBot {
 			owners.remove(gameMap.getMyPlayerId());
 			Map<Double, LinkedList<Entity>> enemyShipsByDistance = gameMap.nearbyEntitiesByDistance(target, 's', owners);
 			int countUndockedEnemyShips = Entity.countUndockedShipsInRange(enemyShipsByDistance, 85);
-
 
 			//Add a command for each ship in moveList
 			for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {

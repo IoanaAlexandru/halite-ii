@@ -48,6 +48,8 @@ public class Networking {
         System.out.println(moveString);
     }
 
+    public int getTurn() { return turn; }
+
     private static String readLine() {
         try {
             StringBuilder builder = new StringBuilder();
