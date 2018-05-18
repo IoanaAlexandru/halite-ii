@@ -26,7 +26,7 @@ public class MyBot {
 			boolean moveCommand = true;
 
 			// Checks survival strategy conditions
-            boolean survivalMode = false;
+            boolean survivalMode = true;
             List<Player> players = gameMap.getAllPlayers();
             int stillAlive = 0;  // number of players that still have ships
             for (Player p : players) {
@@ -53,11 +53,24 @@ public class MyBot {
                         survivalMode = false;
                     }
                 }
+            } else {
+                survivalMode = false;
             }
 
             if (survivalMode) {
                 for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {
-                    // TODO
+                    Position closestCorner =  gameMap.getCorners().get(0);
+                    for (Position c : gameMap.getCorners()) {
+                        if (ship.getDistanceTo(c) < ship.getDistanceTo(closestCorner))
+                            closestCorner = c;
+                    }
+
+                    Entity e = new Entity(-1, 1, closestCorner.getXPos(), closestCorner.getYPos(), 1, 1);
+                    final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, ship, e, Constants.MAX_SPEED);
+                    if (newThrustMove != null) {
+                        moveList.add(newThrustMove);
+                        Log.log("navigate to planet");
+                    }
                 }
                 continue;
             }

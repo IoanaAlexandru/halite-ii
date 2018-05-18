@@ -43,6 +43,15 @@ public class GameMap {
         return new Position(width / 2, height / 2);
     }
 
+    public LinkedList<Position> getCorners() {
+        LinkedList<Position> corners = new LinkedList<>();
+        corners.add(new Position(0, 0));
+        corners.add(new Position(0, width - 1));
+        corners.add(new Position(height - 1, 0));
+        corners.add(new Position(height - 1, width - 1));
+        return corners;
+    }
+
     public int getMyPlayerId() {
         return playerId;
     }
