@@ -59,6 +59,12 @@ public class MyBot {
 
             if (survivalMode) {
                 for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {
+                    if (ship.getDockingStatus() != Ship.DockingStatus.Undocked) {
+                        moveList.add(new UndockMove(ship));
+                        Log.log("undock");
+                        continue;
+                    }
+
                     Position closestCorner =  gameMap.getCorners().get(0);
                     for (Position c : gameMap.getCorners()) {
                         if (ship.getDistanceTo(c) < ship.getDistanceTo(closestCorner))
@@ -81,23 +87,28 @@ public class MyBot {
 			owners.add(gameMap.getMyPlayerId());
 			Map<Double, LinkedList<Entity>> alliedShipsByDistance = gameMap.nearbyEntitiesByDistance(target, 's', owners);
 			int countUndockedAlliedShips = Entity.countUndockedShipsInRange(alliedShipsByDistance, 25);
+			int countDockingAlliedShips = 0;
 
 			//undocked enemy ships within a radius of 85
 			owners = gameMap.getAllPlayerIds();
 			owners.remove(gameMap.getMyPlayerId());
 			Map<Double, LinkedList<Entity>> enemyShipsByDistance = gameMap.nearbyEntitiesByDistance(target, 's', owners);
-			int countUndockedEnemyShips = Entity.countUndockedShipsInRange(enemyShipsByDistance, 85);
+			int countUndockedEnemyShips = Entity.countUndockedShipsInRange(enemyShipsByDistance, 100);
+            int countDockedEnemyShips = Entity.countDockedShipsInRange(enemyShipsByDistance, 80);
 
-			//Add a command for each ship in moveList
+
+            //Add a command for each ship in moveList
 			for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {
 
 				//docked ships will undock if enemyCount > allyCount in a radius of 65
 				if (ship.getDockingStatus() != Ship.DockingStatus.Undocked) {
 
-					countUndockedAlliedShips = Entity.countUndockedShipsInRange(alliedShipsByDistance, 65);
-					countUndockedEnemyShips = Entity.countUndockedShipsInRange(enemyShipsByDistance, 65);
-
-					if (countUndockedAlliedShips < countUndockedEnemyShips) {
+//					countUndockedAlliedShips = Entity.countUndockedShipsInRange(alliedShipsByDistance, 65);
+//					countUndockedEnemyShips = Entity.countUndockedShipsInRange(enemyShipsByDistance, 65);
+//					int countDockedEnemyShips = Entity.countDockedShipsInRange(enemyShipsByDistance, 30);
+                    Log.log("UnAlSh" + Integer.toString(countUndockedAlliedShips));
+					if (countUndockedAlliedShips < countUndockedEnemyShips
+                            || countDockedEnemyShips > countUndockedAlliedShips) {
 						moveList.add(new UndockMove(ship));
 						Log.log("undock");
 						continue;
@@ -127,8 +138,9 @@ public class MyBot {
 							if (!((Planet) entity).isOwned() ||
 									(entity.getOwner() == gameMap.getMyPlayerId() && !((Planet) entity).isFull())) {
 
-                                if (ship.canDock((Planet) entity)) {
+                                if (ship.canDock((Planet) entity) && countUndockedAlliedShips - countDockingAlliedShips > 0) {
                                     moveList.add(new DockMove(ship, (Planet) entity));
+                                    countDockingAlliedShips++;
                                     moveCommand = true;
                                     Log.log("dock");
                                     break;
@@ -159,18 +171,18 @@ public class MyBot {
 					}
 				}
 
-				if (moveCommand)
-					continue;
+//				if (moveCommand)
+//					continue;
 
-				//if allyCount > enemyCount, then dock
-				if (countUndockedAlliedShips > countUndockedEnemyShips) {
-					moveList.add(new DockMove(ship, target));
-					Log.log("dock 2?");
-					moveCommand = true;
-					break;
-				} else {
-					Log.log("NU.");
-				}
+//				//if allyCount > enemyCount, then dock
+//				if (countUndockedAlliedShips > countUndockedEnemyShips && countUndockedAlliedShips > 0) {
+//					moveList.add(new DockMove(ship, target));
+//					Log.log("dock 2?");
+//					moveCommand = true;
+//					break;
+//				} else {
+//
+//				}
 
 			}
 

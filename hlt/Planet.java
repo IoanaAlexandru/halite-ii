@@ -57,11 +57,11 @@ public class Planet extends Entity {
 
         // The farthest from ship, the less points
         if (distance <= 75)
-            score += 3 * this.dockingSpots;
+            score += 1 * this.dockingSpots;
         if (distance <= 50)
-            score += 3 * this.dockingSpots;
+            score += 1 * this.dockingSpots;
         if (distance <= 25)
-            score += 3 * this.dockingSpots;
+            score += 1 * this.dockingSpots;
         score -= (int) distance;
 
         return score;

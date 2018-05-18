@@ -68,4 +68,21 @@ public class Entity extends Position implements Comparable<Entity> {
 		}
 		return count;
 	}
+
+	public static int countDockedShipsInRange(Map<Double, LinkedList<Entity>> shipsByDistance, int range) {
+		int count = 0;
+
+		for (double dist : shipsByDistance.keySet()) {
+			for (Entity e : shipsByDistance.get(dist)) {
+				if (((Ship) e).getDockingStatus() == Ship.DockingStatus.Docked) {
+					if (dist <= range) {
+						count++;
+					} else {
+						break;
+					}
+				}
+			}
+		}
+		return count;
+	}
 }
