@@ -102,7 +102,9 @@ public class Networking {
             System.out.println(botName);
         }
 
+        Log.log("Update 1");
         final Metadata inputStringMetadata = readLineIntoMetadata();
+        Log.log("Update 2");
 
         if (turn == 0) {
             Log.log("--- PRE-GAME ---");

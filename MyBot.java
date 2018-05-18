@@ -19,9 +19,11 @@ public class MyBot {
         final ArrayList<Ship> assignedEnemies = new ArrayList<>();
 
         for (; ; ) {
+            Log.log("Initialising...");
             moveList.clear();
             assignedEnemies.clear();
             networking.updateMap(gameMap);
+            Log.log("Continuing...");
 
             LinkedList<Integer> owners = new LinkedList<>();
 //            Planet target = gameMap.colonizationTarget();
@@ -60,6 +62,7 @@ public class MyBot {
             }
 
             if (survivalMode) {
+                Log.log("SURVIVAL MODE - ACTIVATED");
                 for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {
                     Position closestCorner =  gameMap.getCorners().get(0);
                     for (Position c : gameMap.getCorners()) {
@@ -71,7 +74,7 @@ public class MyBot {
                     final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, ship, e, Constants.MAX_SPEED);
                     if (newThrustMove != null) {
                         moveList.add(newThrustMove);
-                        Log.log("navigate to planet");
+                        Log.log("ABORT, ABORT");
                     }
                 }
             }  else {
@@ -104,13 +107,14 @@ public class MyBot {
                     if (newThrustMove != null) {
                         moveList.add(newThrustMove);
                         assignedEnemies.add(closestEnemyShip);
-
+                        Log.log("THIS IS SPARTA");
                     }
                 }
             }
 
             Log.log(Integer.toString(moveList.size()));
             Networking.sendMoves(moveList);
+            Log.log("Next...");
         }
     }
 }
