@@ -5,7 +5,7 @@ import java.util.*;
 public class MyBot {
     public static void main(final String[] args) {
         final Networking networking = new Networking();
-        final GameMap gameMap = networking.initialize("Marco Polo");
+        final GameMap gameMap = networking.initialize("Bear Grylls");
 
         // We now have 1 full minute to analyse the initial map.
         final String initialMapIntelligence =
@@ -19,14 +19,11 @@ public class MyBot {
         final ArrayList<Ship> assignedEnemies = new ArrayList<>();
 
         for (; ; ) {
-            Log.log("Initialising...");
             moveList.clear();
             assignedEnemies.clear();
             networking.updateMap(gameMap);
-            Log.log("Continuing...");
 
             LinkedList<Integer> owners = new LinkedList<>();
-//            Planet target = gameMap.colonizationTarget();
             boolean moveCommand = true;
 
             // Checks survival strategy conditions
@@ -39,7 +36,7 @@ public class MyBot {
             }
 
             owners.add(gameMap.getMyPlayerId());
-            if (stillAlive >= 2 && networking.getTurn() >= 10) {
+            if (stillAlive >= 2 && networking.getTurn() >= 5) {
                 LinkedList<Entity> myOwnedPlanets = gameMap.sortedNearbyEntities(gameMap.getMyPlayer().getShips().get(0), 'p', owners);
                 for (Entity e : myOwnedPlanets) {
                     //undocked allied ships for target within a radius of 50
@@ -62,9 +59,9 @@ public class MyBot {
             }
 
             if (survivalMode) {
-                Log.log("SURVIVAL MODE - ACTIVATED");
+                Log.log("SURVIVAL MODE - INITIATED");
                 for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {
-                    Position closestCorner =  gameMap.getCorners().get(0);
+                    Position closestCorner = gameMap.getCorners().get(0);
                     for (Position c : gameMap.getCorners()) {
                         if (ship.getDistanceTo(c) < ship.getDistanceTo(closestCorner))
                             closestCorner = c;
@@ -77,7 +74,7 @@ public class MyBot {
                         Log.log("ABORT, ABORT");
                     }
                 }
-            }  else {
+            } else {
 
                 //Add a command for each ship in moveList
                 for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {
@@ -112,9 +109,7 @@ public class MyBot {
                 }
             }
 
-            Log.log(Integer.toString(moveList.size()));
             Networking.sendMoves(moveList);
-            Log.log("Next...");
         }
     }
 }
