@@ -25,7 +25,7 @@ public class MyBot {
 
 
 			LinkedList<Integer> owners = new LinkedList<>();
-			Planet target = null;
+			Planet target = gameMap.colonizationTarget();
 			boolean moveCommand = false;
 
 			//undocked allied ships for target within a radius of 25
@@ -51,18 +51,18 @@ public class MyBot {
 
 					if (countUndockedAlliedShips < countUndockedEnemyShips) {
 						moveList.add(new UndockMove(ship));
-						break;
+						Log.log("undock");
+						continue;
 					}
-					continue;
 				}
 				//navigate towards target until you can dock
 				if (!ship.canDock(target)) {
 					final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, ship, target, Constants.MAX_SPEED);
 					if (newThrustMove != null) {
 						moveList.add(newThrustMove);
-						break;
+						Log.log("navigate to planet");
+						continue;
 					}
-					continue;
 				}
 
 				owners = gameMap.getAllPlayerIds();
@@ -81,13 +81,14 @@ public class MyBot {
 
                                 if (ship.canDock((Planet) entity)) {
                                     moveList.add(new DockMove(ship, (Planet) entity));
-                                    Log.log("1");
+                                    moveCommand = true;
+                                    Log.log("dock");
                                     break;
                                 } else {
 									final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, ship, entity, Constants.MAX_SPEED);
                                     if (newThrustMove != null) {
                                         moveList.add(newThrustMove);
-                                        Log.log("2");
+                                        Log.log("navigate to planet 2?");
                                         break;
                                     }
                                 }
@@ -101,20 +102,25 @@ public class MyBot {
 								final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, ship, entity, Constants.MAX_SPEED);
 								if (newThrustMove != null) {
 									moveList.add(newThrustMove);
-									Log.log("3");
+									moveCommand = true;
+									Log.log("THIS IS SPARTA");
 									break;
 								}
 							}
 						}
 					}
 				}
+
+				if (moveCommand)
+					continue;
+
 				//if allyCount > enemyCount, then dock
 				if (countUndockedAlliedShips > countUndockedEnemyShips) {
 					moveList.add(new DockMove(ship, target));
 					moveCommand = true;
 					break;
 				} else {
-
+//					Log.log("4");
 				}
 
 			}
