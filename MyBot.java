@@ -45,6 +45,7 @@ public class MyBot {
 
 				//docked ships will undock if enemyCount > allyCount in a radius of 65
 				if (ship.getDockingStatus() != Ship.DockingStatus.Undocked) {
+
 					countUndockedAlliedShips = Entity.countUndockedShipsInRange(alliedShipsByDistance, 65);
 					countUndockedEnemyShips = Entity.countUndockedShipsInRange(enemyShipsByDistance, 65);
 
@@ -60,6 +61,51 @@ public class MyBot {
 					if (newThrustMove != null) {
 						moveList.add(newThrustMove);
 						break;
+					}
+					continue;
+				}
+
+				owners = gameMap.getAllPlayerIds();
+				owners.add(-1);
+
+				LinkedList<Entity> allEntitiesByDistance = gameMap.sortedNearbyEntities(ship, 'a', owners);
+
+				if (!allEntitiesByDistance.isEmpty()) {
+					for (Entity entity : allEntitiesByDistance) {
+
+						//PLANET
+						if (entity instanceof Planet) {
+							//empty planet / our planet and not full -> move towards it
+							if (!((Planet) entity).isOwned() ||
+									(entity.getOwner() == gameMap.getMyPlayerId() && !((Planet) entity).isFull())) {
+
+                                if (ship.canDock((Planet) entity)) {
+                                    moveList.add(new DockMove(ship, (Planet) entity));
+                                    Log.log("1");
+                                    break;
+                                } else {
+									final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, ship, entity, Constants.MAX_SPEED);
+                                    if (newThrustMove != null) {
+                                        moveList.add(newThrustMove);
+                                        Log.log("2");
+                                        break;
+                                    }
+                                }
+							}
+						}
+						//SHIP
+						else {
+							//ship not ours -> move towards it
+							if (entity.getOwner() != gameMap.getMyPlayerId()) {
+
+								final ThrustMove newThrustMove = Navigation.navigateShipToEntity(gameMap, ship, entity, Constants.MAX_SPEED);
+								if (newThrustMove != null) {
+									moveList.add(newThrustMove);
+									Log.log("3");
+									break;
+								}
+							}
+						}
 					}
 				}
 				//if allyCount > enemyCount, then dock

@@ -39,6 +39,10 @@ public class GameMap {
         return width;
     }
 
+    public Position getCenter() {
+        return new Position(width / 2, height / 2);
+    }
+
     public int getMyPlayerId() {
         return playerId;
     }
@@ -101,17 +105,16 @@ public class GameMap {
     }
 
     /**
-     *
-     * @param entity reference position
+     * @param entity     reference position
      * @param entityType 'p' for planets, 's' for ships, 'a' for all
-     * @param owners list of IDs (can contain -1 for empty planets)
+     * @param owners     list of IDs (can contain -1 for empty planets)
      * @return list of relevant entities on the map, sorted by nearest to farthest from the reference position
      */
-   public Map<Double, LinkedList<Entity>> nearbyEntitiesByDistance(final Entity entity, char entityType, LinkedList<Integer> owners) {
-		final Map<Double, LinkedList<Entity>> entityByDistance = new TreeMap<>();
-		double distance;
+    public Map<Double, LinkedList<Entity>> nearbyEntitiesByDistance(final Entity entity, char entityType, LinkedList<Integer> owners) {
+        final Map<Double, LinkedList<Entity>> entityByDistance = new TreeMap<>();
+        double distance;
 
-		if (entityType == 'p' || entityType == 'a')
+        if (entityType == 'p' || entityType == 'a')
             for (final Planet planet : planets.values()) {
 
                 if (planet.equals(entity) || !owners.contains(planet.getOwner())) {
@@ -130,32 +133,72 @@ public class GameMap {
             }
 
         if (entityType == 's' || entityType == 'a')
-		for (final Ship ship : allShips) {
-			if (ship.equals(entity) || !owners.contains(ship.getOwner())) {
-				continue;
-			}
+            for (final Ship ship : allShips) {
+                if (ship.equals(entity) || !owners.contains(ship.getOwner())) {
+                    continue;
+                }
 
-			distance = entity.getDistanceTo(ship);
+                distance = entity.getDistanceTo(ship);
 
-			if (entityByDistance.get(distance) == null)
-				entityByDistance.put(distance, new LinkedList<Entity>());
-			entityByDistance.get(distance).add(ship);
-		}
+                if (entityByDistance.get(distance) == null)
+                    entityByDistance.put(distance, new LinkedList<Entity>());
+                entityByDistance.get(distance).add(ship);
+            }
 
-		return entityByDistance;
-	}
+        return entityByDistance;
+    }
 
-	public LinkedList<Entity> sortedNearbyEntities(final Entity entity, char entityType, LinkedList<Integer> owners) {
-       LinkedList<Entity> entities = new LinkedList<>();
-       Map<Double, LinkedList<Entity>> entitiesByDistance = nearbyEntitiesByDistance(entity, entityType, owners);
+    public LinkedList<Entity> sortedNearbyEntities(final Entity entity, char entityType, LinkedList<Integer> owners) {
+        LinkedList<Entity> entities = new LinkedList<>();
+        Map<Double, LinkedList<Entity>> entitiesByDistance = nearbyEntitiesByDistance(entity, entityType, owners);
 
-       for (double dist : entitiesByDistance.keySet()) {
-           for (Entity ent : entitiesByDistance.get(dist)) {
-               entities.add(ent);
-           }
-       }
+        for (double dist : entitiesByDistance.keySet()) {
+            for (Entity ent : entitiesByDistance.get(dist)) {
+                entities.add(ent);
+            }
+        }
 
-       return entities;
+        return entities;
+    }
+
+    public Ship getShipClosestToCenter() {
+        Position center = this.getCenter();
+        Ship closestShip = getAllShips().get(0);
+        double minDistance = closestShip.getDistanceTo(center);
+
+        for (Ship ship : getAllShips()) {
+            double distance = ship.getDistanceTo(center);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestShip = ship;
+            }
+        }
+        return closestShip;
+    }
+
+    public Planet colonizationTarget() {
+        // using ship closest to center as reference
+        Ship closestShip = getShipClosestToCenter();
+
+        LinkedList<Integer> owners = new LinkedList<>(getAllPlayerIds());
+        owners.add(-1);
+        Map<Double, LinkedList<Entity>> nearbyPlanetsByDistance = nearbyEntitiesByDistance(closestShip, 'p', owners);
+
+        Planet target = getAllPlanets().get(0);
+        int bestScore = Integer.MIN_VALUE;
+        for (double dist : nearbyPlanetsByDistance.keySet()) {
+            for (Entity e : nearbyPlanetsByDistance.get(dist)) {
+                Planet planet = (Planet) e;
+                int score = planet.getScore(this, dist);
+
+                if (score > bestScore) {
+                    target = planet;
+                    bestScore = score;
+                }
+            }
+        }
+
+        return target;
     }
 
     public GameMap updateMap(final Metadata mapMetadata) {

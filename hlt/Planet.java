@@ -46,6 +46,27 @@ public class Planet extends Entity {
         return getOwner() != -1;
     }
 
+    public int getScore(GameMap gameMap, double distance) {
+        int score = 0;
+
+        // 6 points per docking spot
+        score += 6 * this.dockingSpots;
+
+        // The farthest from center, the less points
+        score -= (int) this.getDistanceTo(gameMap.getCenter()) / 2;
+
+        // The farthest from ship, the less points
+        if (distance <= 75)
+            score += 3 * this.dockingSpots;
+        if (distance <= 50)
+            score += 3 * this.dockingSpots;
+        if (distance <= 25)
+            score += 3 * this.dockingSpots;
+        score -= (int) distance;
+
+        return score;
+    }
+
     @Override
     public String toString() {
         return "Planet[" +
