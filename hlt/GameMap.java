@@ -61,6 +61,15 @@ public class GameMap {
         return getAllPlayers().get(getMyPlayerId());
     }
 
+    public LinkedList<Position> getCorners() {
+        LinkedList<Position> corners = new LinkedList<>();
+        corners.add(new Position(0, 0));
+        corners.add(new Position(0, width - 1));
+        corners.add(new Position(height - 1, 0));
+        corners.add(new Position(height - 1, width - 1));
+        return corners;
+    }
+
     public Ship getShip(final int playerId, final int entityId) throws IndexOutOfBoundsException {
         return players.get(playerId).getShip(entityId);
     }

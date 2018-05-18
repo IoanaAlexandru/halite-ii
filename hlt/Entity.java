@@ -1,5 +1,8 @@
 package hlt;
 
+import java.util.LinkedList;
+import java.util.Map;
+
 public class Entity extends Position implements Comparable<Entity>{
 
     private final int owner;
@@ -48,4 +51,20 @@ public class Entity extends Position implements Comparable<Entity>{
 
 			return (int) (o.radius - this.radius);
 	}
+
+    public static int countUndockedShipsInRange(Map<Double, LinkedList<Entity>> shipsByDistance, int range) {
+        int count = 0;
+        for (double dist : shipsByDistance.keySet()) {
+            for (Entity e : shipsByDistance.get(dist)) {
+                if (((Ship) e).getDockingStatus() == Ship.DockingStatus.Undocked) {
+                    if (dist <= range) {
+                        count++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        return count;
+    }
 }
