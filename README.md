@@ -73,3 +73,24 @@ navă dintre cele ale inamicului care nu a fost țintită deja de o
 altă rachetă.
 
 End of story.
+
+## Task 3
+
+In urma strategiei alese la task-ul trecut, și anume de a ataca cele
+mai apropiate nave inamice, ne-am gândit că ar trebui sa intrăm în
+defensivă, un fel de strategie "apocaliptică". Atunci când este
+conștient de faptul că nu poate câștiga, fuge de inamici, ca să
+evite să fie lovit (deoarece într-un joc cu 4P, în orice situație,
+un player care are la final o navă va avea un scor mai mare decât
+unul care nu mai are nici o navă).
+
+Astfel, am lucrat în clasa MyBot urmatoarele:
+-> verificarea Survival Mode
+    - pe baza strategiei [de aici](https://recursive.cc/blog/halite-ii-post-mortem.html),
+    verificăm dacă bot-ul trebuie să intre în Survival Mode
+    (atunci când nu mai are șanse de câștig), iar atunci acesta 
+    își va trimite navele în cel mai apropiat colt față de ele
+    - am calculat și distanta fata de cel mai apropiat colt
+    și pe baza rezultatului, navele pornesc spre acel loc
+-> daca încă poate câștiga
+    - se implementează strategia pur ofensivă de la Task-ul 2.
